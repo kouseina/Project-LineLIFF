@@ -99,13 +99,12 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             // send same message as reply to user
                             $result = $bot->replyText($event['replyToken'], $event['message']['text']);
                         }
-
+                        
                         $response->getBody()->write($result->getJSONDecodedBody());
                         return $response
                             ->withHeader('Content-Type', 'application/json')
                             ->withStatus($result->getHTTPStatus());
                     }
-                    
                 } else {
                     //message from single user
                     if ($event['message']['type'] == 'text') {
