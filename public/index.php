@@ -79,6 +79,9 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
                         $result = $bot->replyText($event['replyToken'], $event['message']['text']);
                         $response->getBody()->write((string) $result->getJSONDecodedBody());
+                        
+                        $replyToken = $event['replyToken'];
+                        
                         return $response
                             ->withHeader('Content-Type', 'application/json')
                             ->withStatus($result->getHTTPStatus());
