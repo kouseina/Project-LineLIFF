@@ -79,7 +79,24 @@ if (is_array($data['events'])) {
                 return $response
                     ->withHeader('Content-Type', 'application/json')
                     ->withStatus($result->getHTTPStatus());
-            } 
+            } else if (
+                $event['message']['type'] == 'image' or
+                $event['message']['type'] == 'video' or
+                $event['message']['type'] == 'audio' or
+                $event['message']['type'] == 'file'
+            ) {
+                $contentURL = "https://implementlinephp.herokuapp.com/public/content/" . $event['message']['id'];
+                $contentType = ucfirst($event['message']['type']);
+                $result = $bot->replyText(
+                    $event['replyToken'],
+                    $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL
+                );
+
+                $response->getBody()->write((string) $result->getJSONDecodedBody());
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus($result->getHTTPStatus());
+            }
         }
     }
 }
