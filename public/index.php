@@ -86,13 +86,34 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
 $app->get('/pushmessage', function ($req, $response) use ($bot) {
     // send push message to user
-    $userId = 'U1afb282d2e367cc2396fbf1d8716a5c7';
+    $userId = 'Ud87671ad3f635d81d1a142dc371d0d5c';
     $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan push');
     $result = $bot->pushMessage($userId, $textMessageBuilder);
 
     $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
     $bot->pushMessage($userId, $stickerMessageBuilder);
 
+    $response->getBody()->write((string) $result->getJSONDecodedBody());
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($result->getHTTPStatus());
+});
+
+$app->get('/multicast', function($req, $response) use ($bot)
+{
+    // list of users
+    $userList = [
+        'Ud87671ad3f635d81d1a142dc371d0d5c',
+        'U1afb282d2e367cc2396fbf1d8716a5c7',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'];
+ 
+    // send multicast message to user
+    $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan multicast');
+    $result = $bot->multicast($userList, $textMessageBuilder);
+ 
+ 
     $response->getBody()->write((string) $result->getJSONDecodedBody());
     return $response
         ->withHeader('Content-Type', 'application/json')
