@@ -76,8 +76,6 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             ->withStatus($result->getHTTPStatus());
                     } else {
                         // message from single user
-                        $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-                        $response->getBody()->write((string) $result->getJSONDecodedBody());
 
                         if ($event['message']['type'] == 'text') {
                             // send same message as reply to user
@@ -117,10 +115,6 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                                 ->withHeader('Content-Type', 'application/json')
                                 ->withStatus($result->getHTTPStatus());
                         }
-
-                        return $response
-                            ->withHeader('Content-Type', 'application/json')
-                            ->withStatus($result->getHTTPStatus());
                     }
                 } else {
                     //message from single user
