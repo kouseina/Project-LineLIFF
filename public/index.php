@@ -53,53 +53,54 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
             return $response->withStatus(400, 'Invalid signature');
         }
     }
-});
+    $data = json_decode($body, true);
+    if (is_array($data['events'])) {
+        foreach ($data['events'] as $event) {
+            if ($event['type'] == 'message') {
+                if ($event['message']['type'] == 'text') {
+                    // send same message as reply to user
+                    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 
-$data = json_decode($body, true);
-if (is_array($data['events'])) {
-    foreach ($data['events'] as $event) {
-        if ($event['type'] == 'message') {
-            if ($event['message']['type'] == 'text') {
-                // send same message as reply to user
-                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                    $bot->replyText($replyToken, 'ini pesan balasan');
 
-                $bot->replyText($replyToken, 'ini pesan balasan');
+                    $packageId = 1;
+                    $stickerId = 3;
+                    $stickerMessageBuilder = new StickerMessageBuilder($packageId, $stickerId);
+                    $bot->replyMessage($replyToken, $stickerMessageBuilder);
 
-                $packageId = 1;
-                $stickerId = 3;
-                $stickerMessageBuilder = new StickerMessageBuilder($packageId, $stickerId);
-                $bot->replyMessage($replyToken, $stickerMessageBuilder);
-
-                // or we can use replyMessage() instead to send reply message
-                // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
-                // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+                    // or we can use replyMessage() instead to send reply message
+                    // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
+                    // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 
 
-                $response->getBody()->write($result->getJSONDecodedBody());
-                return $response
-                    ->withHeader('Content-Type', 'application/json')
-                    ->withStatus($result->getHTTPStatus());
-            } else if (
-                $event['message']['type'] == 'image' or
-                $event['message']['type'] == 'video' or
-                $event['message']['type'] == 'audio' or
-                $event['message']['type'] == 'file'
-            ) {
-                $contentURL = "https://implementlinephp.herokuapp.com/public/content/" . $event['message']['id'];
-                $contentType = ucfirst($event['message']['type']);
-                $result = $bot->replyText(
-                    $event['replyToken'],
-                    $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL
-                );
+                    $response->getBody()->write($result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                } else if (
+                    $event['message']['type'] == 'image' or
+                    $event['message']['type'] == 'video' or
+                    $event['message']['type'] == 'audio' or
+                    $event['message']['type'] == 'file'
+                ) {
+                    $contentURL = "https://implementlinephp.herokuapp.com/public/content/" . $event['message']['id'];
+                    $contentType = ucfirst($event['message']['type']);
+                    $result = $bot->replyText(
+                        $event['replyToken'],
+                        $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL
+                    );
 
-                $response->getBody()->write((string) $result->getJSONDecodedBody());
-                return $response
-                    ->withHeader('Content-Type', 'application/json')
-                    ->withStatus($result->getHTTPStatus());
+                    $response->getBody()->write((string) $result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                }
             }
         }
     }
-}
+});
+
+
 
 $app->get('/pushmessage', function ($req, $response) use ($bot) {
     // send push message to user
@@ -153,10 +154,10 @@ $app->get('/content/{messageId}', function ($req, $response) use ($bot) {
     $route = $req->getAttribute('route');
     $messageId = $route->getArgument('messageId');
     $result = $bot->getMessageContent($messageId);
- 
+
     // set response
     $response->getBody()->write($result->getRawBody());
- 
+
     return $response
         ->withHeader('Content-Type', $result->getHeader('Content-Type'))
         ->withStatus($result->getHTTPStatus());
