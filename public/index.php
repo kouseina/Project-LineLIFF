@@ -163,4 +163,97 @@ $app->get('/content/{messageId}', function ($req, $response) use ($bot) {
         ->withStatus($result->getHTTPStatus());
 });
 
+$data = json_decode($body, true);
+if (is_array($data['events'])) {
+    foreach ($data['events'] as $event) {
+        if ($event['type'] == 'message') {
+            if (
+                $event['source']['type'] == 'group' or
+                $event['source']['type'] == 'room'
+            ) {
+                if ($event['source']['userId']) {
+
+                    $userId = $event['source']['userId'];
+                    $getprofile = $bot->getProfile($userId);
+                    $profile = $getprofile->getJSONDecodedBody();
+                    $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
+
+                    $result = $bot->replyMessage($event['replyToken'], $greetings);
+                    $response->getBody()->write((string) $result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                } else {
+                    // message from single user
+                    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                    $response->getBody()->write((string) $result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                }
+            } else {
+                $data = json_decode($body, true);
+                if (is_array($data['events'])) {
+                    foreach ($data['events'] as $event) {
+                        if ($event['type'] == 'message') {
+                            if ($event['message']['type'] == 'text') {
+                                // send same message as reply to user
+                                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+
+                                $bot->replyText($replyToken, 'ini pesan balasan');
+
+                                $packageId = 1;
+                                $stickerId = 3;
+                                $stickerMessageBuilder = new StickerMessageBuilder($packageId, $stickerId);
+                                $bot->replyMessage($replyToken, $stickerMessageBuilder);
+
+                                // or we can use replyMessage() instead to send reply message
+                                // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
+                                // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+
+
+                                $response->getBody()->write($result->getJSONDecodedBody());
+                                return $response
+                                    ->withHeader('Content-Type', 'application/json')
+                                    ->withStatus($result->getHTTPStatus());
+                            } else if (
+                                $event['message']['type'] == 'image' or
+                                $event['message']['type'] == 'video' or
+                                $event['message']['type'] == 'audio' or
+                                $event['message']['type'] == 'file'
+                            ) {
+                                $contentURL = "https://implementlinephp.herokuapp.com/public/content/" . $event['message']['id'];
+                                $contentType = ucfirst($event['message']['type']);
+                                $result = $bot->replyText(
+                                    $event['replyToken'],
+                                    $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL
+                                );
+
+                                $response->getBody()->write((string) $result->getJSONDecodedBody());
+                                return $response
+                                    ->withHeader('Content-Type', 'application/json')
+                                    ->withStatus($result->getHTTPStatus());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private void handleOneOnOneChats(MessageEvent event) {
+    ...
+}
+ 
+private void handleGroupRoomChats(MessageEvent event) {
+    if(!event.getSource().getUserId().isEmpty()) {
+        String userId = event.getSource().getUserId();
+        UserProfileResponse profile = getProfile(userId);
+        replyText(event.getReplyToken(), "Hello, " + profile.getDisplayName());
+    } else {
+        replyText(event.getReplyToken(), "Hello, what is your name?");
+    }
+}
+
 $app->run();
