@@ -120,7 +120,7 @@ $app->get('/multicast', function($req, $response) use ($bot)
         ->withStatus($result->getHTTPStatus());
 });
 
-$app->get('/profile/{userId}', function($req, $res) use ($bot)
+$app->get('/profile/{userId}', function($req, $response) use ($bot)
 {
     // get user profile
     $route  = $req->getAttribute('route');
