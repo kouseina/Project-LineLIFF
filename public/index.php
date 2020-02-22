@@ -89,6 +89,8 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         // send same message as reply to user
                         $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 
+                        $replyToken = $event['replyToken'];
+
                         $bot->replyText($replyToken, 'ini pesan balasan');
 
                         $packageId = 1;
