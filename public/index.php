@@ -101,65 +101,65 @@ if (is_array($data['events'])) {
     }
 }
 
-// $app->get('/pushmessage', function ($req, $response) use ($bot) {
-//     // send push message to user
-//     $userId = 'Ud87671ad3f635d81d1a142dc371d0d5c';
-//     $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan push');
-//     $result = $bot->pushMessage($userId, $textMessageBuilder);
+$app->get('/pushmessage', function ($req, $response) use ($bot) {
+    // send push message to user
+    $userId = 'Ud87671ad3f635d81d1a142dc371d0d5c';
+    $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan push');
+    $result = $bot->pushMessage($userId, $textMessageBuilder);
 
-//     $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
-//     $bot->pushMessage($userId, $stickerMessageBuilder);
+    $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
+    $bot->pushMessage($userId, $stickerMessageBuilder);
 
-//     $response->getBody()->write((string) $result->getJSONDecodedBody());
-//     return $response
-//         ->withHeader('Content-Type', 'application/json')
-//         ->withStatus($result->getHTTPStatus());
-// });
+    $response->getBody()->write((string) $result->getJSONDecodedBody());
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($result->getHTTPStatus());
+});
 
-// $app->get('/multicast', function ($req, $response) use ($bot) {
-//     // list of users
-//     $userList = [
-//         'Ud87671ad3f635d81d1a142dc371d0d5c',
-//         'U1afb282d2e367cc2396fbf1d8716a5c7',
-//         'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-//         'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-//         'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-//     ];
+$app->get('/multicast', function ($req, $response) use ($bot) {
+    // list of users
+    $userList = [
+        'Ud87671ad3f635d81d1a142dc371d0d5c',
+        'U1afb282d2e367cc2396fbf1d8716a5c7',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    ];
 
-//     // send multicast message to user
-//     $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan multicast');
-//     $result = $bot->multicast($userList, $textMessageBuilder);
+    // send multicast message to user
+    $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan multicast');
+    $result = $bot->multicast($userList, $textMessageBuilder);
 
 
-//     $response->getBody()->write((string) $result->getJSONDecodedBody());
-//     return $response
-//         ->withHeader('Content-Type', 'application/json')
-//         ->withStatus($result->getHTTPStatus());
-// });
+    $response->getBody()->write((string) $result->getJSONDecodedBody());
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($result->getHTTPStatus());
+});
 
-// $app->get('/profile', function ($req, $response) use ($bot) {
-//     // get user profile
-//     $userId = 'Ud87671ad3f635d81d1a142dc371d0d5c';
-//     $result = $bot->getProfile($userId);
+$app->get('/profile', function ($req, $response) use ($bot) {
+    // get user profile
+    $userId = 'Ud87671ad3f635d81d1a142dc371d0d5c';
+    $result = $bot->getProfile($userId);
 
-//     $response->getBody()->write((string) $result->getJSONDecodedBody());
-//     return $response
-//         ->withHeader('Content-Type', 'application/json')
-//         ->withStatus($result->getHTTPStatus());
-// });
+    $response->getBody()->write((string) $result->getJSONDecodedBody());
+    return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withStatus($result->getHTTPStatus());
+});
 
-// $app->get('/content/{messageId}', function ($req, $response) use ($bot) {
-//     // get message content
-//     $route = $req->getAttribute('route');
-//     $messageId = $route->getArgument('messageId');
-//     $result = $bot->getMessageContent($messageId);
+$app->get('/content/{messageId}', function ($req, $response) use ($bot) {
+    // get message content
+    $route = $req->getAttribute('route');
+    $messageId = $route->getArgument('messageId');
+    $result = $bot->getMessageContent($messageId);
  
-//     // set response
-//     $response->getBody()->write($result->getRawBody());
+    // set response
+    $response->getBody()->write($result->getRawBody());
  
-//     return $response
-//         ->withHeader('Content-Type', $result->getHeader('Content-Type'))
-//         ->withStatus($result->getHTTPStatus());
-// });
+    return $response
+        ->withHeader('Content-Type', $result->getHeader('Content-Type'))
+        ->withStatus($result->getHTTPStatus());
+});
 
 $app->run();
