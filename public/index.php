@@ -63,6 +63,8 @@ if (is_array($data['events'])) {
                 // send same message as reply to user
                 $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 
+                $bot->getMessageContent('messageId');
+
                 $bot->replyText($replyToken, 'ini pesan balasan');
 
                 $packageId = 1;
