@@ -90,7 +90,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         if (strtolower($event['message']['text']) == 'user id') {
 
                             $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
-                        } elseif (strtolower($event['message']['text']) == 'flex message') {
+                        } elseif ((strtolower($event['message']['text']) == 'bosen') or (strtolower($event['message']['text']) == 'bosen dong') or (strtolower($event['message']['text']) == 'rekomendasi')) {
 
                             $flexTemplate = file_get_contents("../flex_message.json"); // template flex message
                             $result = $httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
