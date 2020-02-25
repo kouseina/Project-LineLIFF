@@ -155,11 +155,10 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
                         } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                            $contentURL = "https://implementlinephp.herokuapp.com/public/content/" . $event['message']['id'];
                             $contentType = ucfirst($event['message']['type']);
                             $result = $bot->replyText(
                                 $event['replyToken'],
-                                $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL
+                                $contentType . " yang Anda kirim bisa diakses dari link"
                             );
 
                             $response->getBody()->write((string) $result->getJSONDecodedBody());
