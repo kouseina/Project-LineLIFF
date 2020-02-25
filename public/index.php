@@ -130,7 +130,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
                             $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 
-                            $replyToken = $event['replyToken'];
+                            
 
                             $bot->replyText($replyToken, 'ini pesan balasan');
 
