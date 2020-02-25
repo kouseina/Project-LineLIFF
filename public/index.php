@@ -76,12 +76,24 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             ->withStatus($result->getHTTPStatus());
                     } else {
                         // message from single user
+                        if ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                        $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-                        $response->getBody()->write((string) $result->getJSONDecodedBody());
-                        return $response
-                            ->withHeader('Content-Type', 'application/json')
-                            ->withStatus($result->getHTTPStatus());
+                            $greetings = new TextMessageBuilder("Halo, ");
+
+                            $result = $bot->replyMessage($event['replyToken'], $greetings);
+
+                            $response->getBody()->write((string) $result->getJSONDecodedBody());
+                            return $response
+                                ->withHeader('Content-Type', 'application/json')
+                                ->withStatus($result->getHTTPStatus());
+                        } else {
+
+                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                            $response->getBody()->write((string) $result->getJSONDecodedBody());
+                            return $response
+                                ->withHeader('Content-Type', 'application/json')
+                                ->withStatus($result->getHTTPStatus());
+                        }
                     }
                 } else {
                     //message from single user
@@ -103,6 +115,16 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                                     ]
                                 ],
                             ]);
+                        } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
+
+                            $greetings = new TextMessageBuilder("Halo, ");
+
+                            $result = $bot->replyMessage($event['replyToken'], $greetings);
+
+                            $response->getBody()->write((string) $result->getJSONDecodedBody());
+                            return $response
+                                ->withHeader('Content-Type', 'application/json')
+                                ->withStatus($result->getHTTPStatus());
                         } else {
                             // send same message as reply to user
                             $result = $bot->replyText($event['replyToken'], $event['message']['text']);
@@ -153,17 +175,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         if (strtolower($event['message']['text']) == 'user id') {
 
                             $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
-                        } else {
-                            // send same message as reply to user
-                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-                        }
-
-                        $response->getBody()->write($result->getJSONDecodedBody());
-                        return $response
-                            ->withHeader('Content-Type', 'application/json')
-                            ->withStatus($result->getHTTPStatus());
-                    } elseif ($event['message']['type'] == 'text') {
-                        if ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
+                        } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
                             $greetings = new TextMessageBuilder("Halo, ");
 
@@ -173,7 +185,15 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             return $response
                                 ->withHeader('Content-Type', 'application/json')
                                 ->withStatus($result->getHTTPStatus());
+                        } else {
+                            // send same message as reply to user
+                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
                         }
+
+                        $response->getBody()->write($result->getJSONDecodedBody());
+                        return $response
+                            ->withHeader('Content-Type', 'application/json')
+                            ->withStatus($result->getHTTPStatus());
                     }
                 }
             }
