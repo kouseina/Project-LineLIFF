@@ -109,7 +109,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             $userId = $event['source']['userId'];
                             $getprofile = $bot->getProfile($userId);
                             $profile = $getprofile->getJSONDecodedBody();
-                            $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
+                            $greetings = new TextMessageBuilder("Halo, " . $profile['displayName'] . ". Perkenalkan saya bot yang nemenin kamu kalo lagi kesepian. Kamu bisa ketik 'rekomendasi' atau 'bosan' untuk mendapatkan rekomendasi dari kami");
 
                             $result = $bot->replyMessage($event['replyToken'], $greetings);
 
