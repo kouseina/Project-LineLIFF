@@ -155,8 +155,17 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
                         } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                            $textMessageBuilder = new TextMessageBuilder('ini pesan balasan');
-                            $bot->replyMessage($replyToken, $textMessageBuilder);
+                            $userId = $event['source']['userId'];
+                        $getprofile = $bot->getProfile($userId);
+                        $profile = $getprofile->getJSONDecodedBody();
+                        $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
+
+                        $result = $bot->replyMessage($event['replyToken'], $greetings);
+                        $response->getBody()->write((string) $result->getJSONDecodedBody());
+                        return $response
+                            ->withHeader('Content-Type', 'application/json')
+                            ->withStatus($result->getHTTPStatus());
+
                         } else {
                             // send same message as reply to user
                             $result = $bot->replyText($event['replyToken'], $event['message']['text']);
