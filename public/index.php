@@ -132,7 +132,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
                             
 
-                            $bot->replyText($replyToken, 'ini pesan balasan');
+                            
 
                             // or we can use replyMessage() instead to send reply message
                             // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
