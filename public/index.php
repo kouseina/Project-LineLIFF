@@ -122,11 +122,6 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
                         $bot->replyText($replyToken, 'ini pesan balasan');
 
-                        $packageId = 1;
-                        $stickerId = 3;
-                        $stickerMessageBuilder = new StickerMessageBuilder($packageId, $stickerId);
-                        $bot->replyMessage($replyToken, $stickerMessageBuilder);
-
                         // or we can use replyMessage() instead to send reply message
                         // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
                         // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
@@ -150,6 +145,24 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         );
 
                         $response->getBody()->write((string) $result->getJSONDecodedBody());
+                        return $response
+                            ->withHeader('Content-Type', 'application/json')
+                            ->withStatus($result->getHTTPStatus());
+                    } elseif ($event['message']['type'] == 'text') {
+                        // send same message as reply to user
+                        if (strtolower($event['message']['text']) == 'user id') {
+
+                            $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
+                        } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
+
+                            $textMessageBuilder = new TextMessageBuilder('ini pesan balasan');
+                            $bot->replyMessage($replyToken, $textMessageBuilder);
+                        } else {
+                            // send same message as reply to user
+                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                        }
+
+                        $response->getBody()->write($result->getJSONDecodedBody());
                         return $response
                             ->withHeader('Content-Type', 'application/json')
                             ->withStatus($result->getHTTPStatus());
