@@ -106,7 +106,10 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             ]);
                         } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                            $greetings = new TextMessageBuilder("Halo, teman ");
+                            $userId = $event['source']['userId'];
+                            $getprofile = $bot->getProfile($userId);
+                            $profile = $getprofile->getJSONDecodedBody();
+                            $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
 
                             $result = $bot->replyMessage($event['replyToken'], $greetings);
 
