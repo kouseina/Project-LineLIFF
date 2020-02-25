@@ -177,7 +177,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                             $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
                         } elseif ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                            $greetings = new TextMessageBuilder("Halo, ");
+                            $greetings = new TextMessageBuilder("Halo, saya bot ");
 
                             $result = $bot->replyMessage($event['replyToken'], $greetings);
 
