@@ -128,17 +128,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                                 ->withStatus($result->getHTTPStatus());
                         } else {
 
-                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-
-                            // or we can use replyMessage() instead to send reply message
-                            // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
-                            // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-
-
-                            $response->getBody()->write($result->getJSONDecodedBody());
-                            return $response
-                                ->withHeader('Content-Type', 'application/json')
-                                ->withStatus($result->getHTTPStatus());
+                            
                         }
                     } else if (
                         $event['message']['type'] == 'image' or
