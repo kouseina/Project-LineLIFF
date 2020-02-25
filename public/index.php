@@ -119,8 +119,8 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
                         if ((strtolower($event['message']['text']) == 'kamu siapa') or (strtolower($event['message']['text']) == 'kenalin diri dong') or (strtolower($event['message']['text']) == 'kamu siapa?')) {
 
-                            $greetings = new TextMessageBuilder("Halo, ");
-                            $result = $bot->replyMessage($event['replyToken'], $greetings);
+                            $greetings = new TextMessageBuilder("Halo");
+                            $result = $bot->replyText($event['replyToken'], $greetings);
 
                             $response->getBody()->write((string) $result->getJSONDecodedBody());
                             return $response
@@ -129,10 +129,6 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         } else {
 
                             $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-
-                            
-
-                            
 
                             // or we can use replyMessage() instead to send reply message
                             // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
